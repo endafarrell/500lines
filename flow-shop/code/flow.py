@@ -211,7 +211,7 @@ def pick_strategy(strategies, weights):
     #  Rather than selecting a strategy entirely at random, we bias the
     #  random selection towards strategies that have worked well in the
     #  past (according to the weight value).
-    total = sum([weights[strategy] for strategy in strategies])
+    total = sum(weights[strategy] for strategy in strategies)
     pick = random.uniform(0, total)
     count = weights[strategies[0]]
 
@@ -260,8 +260,12 @@ def compile_solution(data, perm):
         #  previous task in the job completed, or when the current machine
         #  completes the task for the previous job.
         for mach in range(1, num_machines):
-            machine_times[mach].append(max(machine_times[mach-1][i] + data[perm[i]][mach-1],
-                                        machine_times[mach][i-1] + data[perm[i-1]][mach]))
+            machine_times[mach].append(
+                max(
+                    machine_times[mach - 1][i] + data[job][mach - 1],
+                    machine_times[mach][i - 1] + data[perm[i - 1]][mach],
+                )
+            )
 
     return machine_times
 

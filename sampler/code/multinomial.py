@@ -47,8 +47,7 @@ class MultinomialDistribution(object):
             The sampled number of occurrences for each outcome
 
         """
-        x = self.rso.multinomial(n, self.p)
-        return x
+        return self.rso.multinomial(n, self.p)
 
     def log_pmf(self, x):
         """Evaluates the log-probability mass function (log-PMF) of a
@@ -99,5 +98,4 @@ class MultinomialDistribution(object):
         The evaluated PMF for draw `x`
 
         """
-        pmf = np.exp(self.log_pmf(x))
-        return pmf
+        return np.exp(self.log_pmf(x))

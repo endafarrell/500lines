@@ -17,8 +17,7 @@ class VirtualMachine(object):
                 '__package__': None,
             }
         f_locals.update(callargs)
-        frame = Frame(code, f_globals, f_locals, self.frame)
-        return frame
+        return Frame(code, f_globals, f_locals, self.frame)
 
     def push_frame(self, frame):
         self.frames.append(frame)
@@ -26,10 +25,7 @@ class VirtualMachine(object):
 
     def pop_frame(self):
         self.frames.pop()
-        if self.frames:
-            self.frame = self.frames[-1]
-        else:
-            self.frame = None
+        self.frame = self.frames[-1] if self.frames else None
 
     # Data stack manipulation
     def top(self):
@@ -62,11 +58,7 @@ class VirtualMachine(object):
 
     def unwind_block(self, block):
         """Unwind the values on the data stack corresponding to a given block."""
-        if block.type == 'except-handler':
-            offset = 3
-        else:
-            offset = 0
-
+        offset = 3 if block.type == 'except-handler' else 0
         while len(self.frame.stack) > block.level + offset:
             self.pop()
 

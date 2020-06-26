@@ -352,7 +352,10 @@ class Scout(Role):
             if len(self.acceptors) >= self.quorum:
                 # strip the ballot numbers from self.accepted_proposals, now that it
                 # represents a majority
-                accepted_proposals = dict((s, p) for s, (b, p) in self.accepted_proposals.iteritems())
+                accepted_proposals = {
+                    s: p for s, (b, p) in self.accepted_proposals.iteritems()
+                }
+
                 # We're adopted; note that this does *not* mean that no other leader is active.
                 # Any such conflicts will be handled by the commanders.
                 self.node.send([self.node.address],

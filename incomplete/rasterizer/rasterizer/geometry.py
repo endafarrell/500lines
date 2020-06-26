@@ -46,8 +46,12 @@ class AABox:
         return self.low.x <= p.x <= self.high.x and \
                self.low.y <= p.y <= self.high.y
     def overlaps(self, r):
-        return not (r.low.x >= self.high.x or r.high.x <= self.low.x or
-                    r.low.y >= self.high.y or r.high.y <= self.low.y)
+        return (
+            r.low.x < self.high.x
+            and r.high.x > self.low.x
+            and r.low.y < self.high.y
+            and r.high.y > self.low.y
+        )
     def intersection(self, other):
         return AABox(self.low.max(other.low), self.high.min(other.high))
     @staticmethod

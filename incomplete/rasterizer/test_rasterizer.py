@@ -53,7 +53,7 @@ def do_it():
     f.close()
 
 def test_quadratic():
-    for i in xrange(1000):
+    for _ in xrange(1000):
         a = random.random()
         b = random.random()
         c = random.random()
@@ -63,7 +63,7 @@ def test_quadratic():
                 raise Exception("fail")
             if v2 * v2 * a + v2 * b + c > 1e-5:
                 raise Exception("fail")
-    for i in xrange(1000):
+    for _ in xrange(1000):
         a = 0
         b = random.random()
         c = random.random()

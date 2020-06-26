@@ -14,6 +14,6 @@ def run(image):
         obj = obj.transform(around(Vector(0.5, 0.5), rotate(angle)))
         s.add(obj)
         step = 3 * radius / distance
-        distance = distance + 0.009 * step
-        angle = angle + step
+        distance += 0.009 * step
+        angle += step
     s.draw(image)

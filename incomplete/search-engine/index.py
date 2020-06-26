@@ -20,8 +20,10 @@ def read_tuples(infile):
 # XXX maybe these functions don't need to exist?
 def read_metadata(index_path):
     with path['documents'].open() as metadata_file:
-        return dict((pathname, (int(mtime), int(size)))
-                    for pathname, size, mtime in read_tuples(metadata_file))
+        return {
+            pathname: (int(mtime), int(size))
+            for pathname, size, mtime in read_tuples(metadata_file)
+        }
 
 # XXX we probably want files_unchanged
 def file_unchanged(metadatas, path):
@@ -63,9 +65,8 @@ def segment_term_doc_ids(segment, needle_term):
 def segment_term_chunks(segment, term):
     previous_chunk = None
     for headword, chunk in skip_file_entries(segment):
-        if headword >= term:
-            if previous_chunk is not None:
-                yield previous_chunk
+        if headword >= term and previous_chunk is not None:
+            yield previous_chunk
         if headword > term:
             break
 
@@ -111,8 +112,11 @@ def build_index(index_path, corpus_path, postings_filters):
     # XXX at this point we should just pass the fucking doc_id into
     # the analyzer function :(
     parent = index_path.parent()
-    rel_paths = dict((path.name, os.path.relpath(path.name, start=parent.name))
-                     for path in corpus_paths)
+    rel_paths = {
+        path.name: os.path.relpath(path.name, start=parent.name)
+        for path in corpus_paths
+    }
+
     rel_postings = ((term, rel_paths[doc_id]) for term, doc_id in postings)
     for ii, chunk in enumerate(blocked(rel_postings, segment_size)):
         write_new_segment(index_path['seg_%s' % ii], sorted(chunk))
@@ -138,8 +142,7 @@ def find_documents(path):
 
 def tokenize_documents(paths):
     for path in paths:
-        for posting in remove_duplicates(tokenize_file(path)):
-            yield posting
+        yield from remove_duplicates(tokenize_file(path))
 
 # Demonstrate a crude set of smart tokenizer frontends.
 def tokenize_file(file_path):
@@ -215,12 +218,13 @@ def read_segment(path):
     for _, chunk in skip_file_entries(path):
         # XXX refactor chunk reading?  We open_gzipped in three places now.
         with path[chunk].open_gzipped() as chunk_file:
-            for item in read_tuples(chunk_file):
-                yield item
+            yield from read_tuples(chunk_file)
 def make_stopwords_filter(stopwords):
     stopwords = set(stopwords)
-    stopwords |= ( set(word.upper()      for word in stopwords) 
-                 | set(word.capitalize() for word in stopwords))
+    stopwords |= {word.upper() for word in stopwords} | {
+        word.capitalize() for word in stopwords
+    }
+
     return lambda postings: ((term, doc_id) for term, doc_id in postings
                              if term not in stopwords)
 word_len = 20                   # to eliminate nonsense words

@@ -45,8 +45,7 @@ class MagicItemDistribution(object):
 
         """
         stats = self._sample_stats()
-        item_stats = dict(zip(self.stats_names, stats))
-        return item_stats
+        return dict(zip(self.stats_names, stats))
 
     def log_pmf(self, item):
         """Compute the log probability the given magical item.
@@ -66,8 +65,7 @@ class MagicItemDistribution(object):
         # First pull out the bonus points for each stat, in the
         # correct order, then pass that to _stats_log_pmf.
         stats = np.array([item[stat] for stat in self.stats_names])
-        log_pmf = self._stats_log_pmf(stats)
-        return log_pmf
+        return self._stats_log_pmf(stats)
 
     def pmf(self, item):
         """Compute the probability the given magical item.
@@ -236,5 +234,4 @@ class DamageDistribution(object):
 
         # Roll the dice and compute the resulting damage.
         dice_rolls = self.dice_dist.sample(self.num_hits * num_dice)
-        damage = np.sum(self.dice_sides * dice_rolls)
-        return damage
+        return np.sum(self.dice_sides * dice_rolls)
