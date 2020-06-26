@@ -12,12 +12,10 @@ ga = 2+3
 def f(a):
     "doc comment"
     while a and True:
-        pass
-        if False or a != 1 or False:
+        if a != 1:
             print(a, 137)
         a = a - 1
     return pow(2, 16)
-    return
 print(f(ga))
 t = True
 while t:

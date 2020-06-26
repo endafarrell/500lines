@@ -22,8 +22,7 @@ def parse_aosafigures(text):
     '''parse_aosafigures(text) -> [(fullmatch, width, location, caption, id)]'''
     # \aosafigure[233pt]{warp-images/2.png}{Event driven}{fig.warp.f2}
     regex = re.compile("(\\\\aosafigure\[?([^\]]+)?\]?\{(.*)\}\{(.*)\}\{(.*)\})",re.MULTILINE)
-    figures_list = regex.findall(text)
-    return figures_list
+    return regex.findall(text)
 
 def test_parse_aosafigures():
     test = (
@@ -195,10 +194,7 @@ if __name__ == '__main__':
     parser.add_argument('--html-refs', action='store_true', default=False)
     args = parser.parse_args()
     destination_file = open(args.output, 'w')
-    if len(args.doc) > 0:
-        input_file = open(args.doc[0])
-    else:
-        input_file = sys.stdin
+    input_file = open(args.doc[0]) if len(args.doc) > 0 else sys.stdin
     input_document = input_file.read()
     if args.markdown:
         tag_name = 'markdown'

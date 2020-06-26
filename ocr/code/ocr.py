@@ -31,7 +31,7 @@ class OCRNeuralNetwork:
         self.data_matrix = data_matrix
         self.data_labels = data_labels
 
-        if (not os.path.isfile(OCRNeuralNetwork.NN_FILE_PATH) or not use_file):
+        if not (os.path.isfile(OCRNeuralNetwork.NN_FILE_PATH) and use_file):
             # Step 1: Initialize weights to small numbers
             self.theta1 = self._rand_initialize_weights(400, num_hidden_nodes)
             self.theta2 = self._rand_initialize_weights(num_hidden_nodes, 10)

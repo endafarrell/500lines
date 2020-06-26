@@ -338,7 +338,7 @@ class Typesetting:
         """Determine the best breakpoint sequence."""
         line = best_candidate.line
         seq = []
-        for j in range(line):
+        for _ in range(line):
             seq.append(best_candidate.position)
             best_candidate = best_candidate.previous
         return seq[::-1]
@@ -483,8 +483,8 @@ def main():
     """Main program."""
     slides = read_input()
 
-    line_length = [float(PAGE_WIDTH - 2 * MARGIN) * 1000 / FONT_SIZE]
     with Rendering() as postscript:
+        line_length = [float(PAGE_WIDTH - 2 * MARGIN) * 1000 / FONT_SIZE]
         for title, text in slides:
             postscript.add_header(title)
             tex = Typesetting(line_length)

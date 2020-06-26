@@ -53,11 +53,7 @@ class Frame(object):
 
     def unwind_block(self, block):
         """Unwind the values on the data stack when a given block is finished."""
-        if block.type == 'except-handler':
-            offset = 3
-        else:
-            offset = 0
-
+        offset = 3 if block.type == 'except-handler' else 0
         while len(self.stack) > block.stack_height + offset:
             self.pop()
 
@@ -134,8 +130,7 @@ class VirtualMachine(object):
                 '__package__': None,
             }
         local_names.update(callargs)
-        frame = Frame(code, global_names, local_names, self.frame)
-        return frame
+        return Frame(code, global_names, local_names, self.frame)
 
     def push_frame(self, frame):
         self.frames.append(frame)
@@ -143,10 +138,7 @@ class VirtualMachine(object):
 
     def pop_frame(self):
         self.frames.pop()
-        if self.frames:
-            self.frame = self.frames[-1]
-        else:
-            self.frame = None
+        self.frame = self.frames[-1] if self.frames else None
 
     # Jumping through bytecode
     def jump(self, jump):
@@ -512,10 +504,10 @@ class VirtualMachine(object):
 
     def byte_RAISE_VARARGS(self, argc):
         cause = exc = None
-        if argc == 2:
-            cause = self.frame.pop()
+        if argc == 1:
             exc = self.frame.pop()
-        elif argc == 1:
+        elif argc == 2:
+            cause = self.frame.pop()
             exc = self.frame.pop()
         return self.do_raise(exc, cause)
 
@@ -573,7 +565,11 @@ class VirtualMachine(object):
     def byte_IMPORT_NAME(self, name):
         level, fromlist = self.frame.popn(2)
         frame = self.frame
-        self.frame.push(__import__(name, frame.global_names, frame.local_names, fromlist, level))
+        frame.push(
+            __import__(
+                name, frame.global_names, frame.local_names, fromlist, level
+            )
+        )
 
     def byte_IMPORT_FROM(self, name):
         mod = self.frame.top()

@@ -299,7 +299,7 @@ class Trackball(object):
         return z
 
 
-    def _rotate(self, x, y, dx, dy): 
+    def _rotate(self, x, y, dx, dy):
         ''' Simulate a track-ball.
 
             Project the points onto the virtual trackball, then figure out the
@@ -311,7 +311,7 @@ class Trackball(object):
             out several variations.
         '''
 
-        if not dx and not dy:
+        if not (dx or dy):
             return [ 0.0, 0.0, 0.0, 1.0]
         last = [x, y,       self._project(self._TRACKBALLSIZE, x, y)]
         new  = [x+dx, y+dy, self._project(self._TRACKBALLSIZE, x+dx, y+dy)]

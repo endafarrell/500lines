@@ -74,8 +74,7 @@ class Storage(object):
     def read(self, address):
         self._f.seek(address)
         length = self._read_integer()
-        data = self._f.read(length)
-        return data
+        return self._f.read(length)
 
     def commit_root_address(self, root_address):
         self.lock()
@@ -87,8 +86,7 @@ class Storage(object):
 
     def get_root_address(self):
         self._seek_superblock()
-        root_address = self._read_integer()
-        return root_address
+        return self._read_integer()
 
     def close(self):
         self.unlock()

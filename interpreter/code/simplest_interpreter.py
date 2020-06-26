@@ -45,9 +45,6 @@ class SimpleInterpreter(object):
             argument = what_to_execute["numbers"][argument]
         elif instruction in argument_meaning["names"]:
             argument = what_to_execute["names"][argument]
-        elif instruction in argument_meaning["jumps"]:
-            pass
-
         return argument
 
 
